@@ -1,9 +1,9 @@
-const express = require('express');
-const cors = require('cors');
-const mongoose = require('mongoose');
-const routes = require('./routes/routes');
-const path = require('path');
-const dotenv = require('dotenv');
+import express from "express";
+import cors from "cors";
+import mongoose from "mongoose";
+import routes from "./routes/routes.js";
+import path from "path";
+import dotenv from "dotenv";
 
 /**
  * Faz a leitura do arquivo
@@ -18,29 +18,30 @@ app.use(express.json());
 /**
  * Vinculando o React ao app
  */
-app.use(express.static(path.join(__dirname, 'client/build')));
+const __dirname = path.resolve();
+app.use(express.static(path.join(__dirname, "client/build")));
 
 /**
  * Rota raiz
  */
-app.get('/api/', (_, response) => {
+app.get("/api/", (_, response) => {
   response.send({
     message:
-      'Bem-vindo à API de lançamentos. Acesse /transaction e siga as orientações',
+      "Bem-vindo à API de lançamentos. Acesse /transaction e siga as orientações",
   });
 });
 
 /**
  * Rotas principais do app
  */
-app.use('/api/transaction', routes);
+app.use("/api/transaction", routes);
 
 /**
  * Conexão ao Banco de Dados
  */
 const { DB_CONNECTION } = process.env;
 
-console.log('Iniciando conexão ao MongoDB...');
+console.log("Iniciando conexão ao MongoDB...");
 mongoose.connect(
   DB_CONNECTION,
   {
@@ -49,7 +50,7 @@ mongoose.connect(
   },
   (err) => {
     if (err) {
-      connectedToMongoDB = false;
+      // let connectedToMongoDB = false;
       console.error(`Erro na conexão ao MongoDB - ${err}`);
     }
   }
@@ -57,9 +58,9 @@ mongoose.connect(
 
 const { connection } = mongoose;
 
-connection.once('open', () => {
-  connectedToMongoDB = true;
-  console.log('Conectado ao MongoDB');
+connection.once("open", () => {
+  // let connectedToMongoDB = true;
+  console.log("Conectado ao MongoDB");
 
   /**
    * Definição de porta e
