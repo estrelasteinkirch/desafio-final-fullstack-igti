@@ -34,6 +34,25 @@ const findAll = async (req, res) => {
   }
 };
 
+const filter = async (req, res) => {
+  const name = req.query.name;
+
+  //condicao para o filtro
+  var condition = name
+    ? { name: { $regex: new RegExp(name), $options: "i" } }
+    : {};
+
+  try {
+    const nameFinded = await TransactionModel.find(condition);
+
+    res.send(nameFinded);
+  } catch (error) {
+    res
+      .status(500)
+      .send({ message: error.message || "Erro ao listar os documentos" });
+  }
+};
+
 const findPeriod = async (req, res) => {
   const period = req.query.period;
 
@@ -47,6 +66,44 @@ const findPeriod = async (req, res) => {
       });
     }
     res.send(transactions);
+  } catch (error) {
+    res
+      .status(500)
+      .send({ message: error.message || "Erro ao listar os documentos" });
+  }
+};
+
+const findYear = async (req, res) => {
+  const year = req.query.period;
+
+  try {
+    if (!year) {
+      return res.status(400).send({
+        message: 'É necessário informar o parâmetro "year"',
+      });
+    }
+
+    const positiveTransactions = await TransactionModel.find({
+      year: year,
+      type: "+",
+    });
+
+    let incomeTotal = positiveTransactions.reduce((acc, transaction) => {
+      return acc + transaction.value;
+    }, 0);
+
+    const negativeTransactions = await TransactionModel.find({
+      year: year,
+      type: "-",
+    });
+
+    let expensesTotal = negativeTransactions.reduce((acc, transaction) => {
+      return acc + transaction.value;
+    }, 0);
+
+    const yearBalance = incomeTotal - expensesTotal;
+
+    res.send(`O saldo total do ano de ${year} foi de R$ ${yearBalance}`);
   } catch (error) {
     res
       .status(500)
@@ -103,4 +160,13 @@ const removeAll = async (req, res) => {
   }
 };
 
-export default { create, findAll, findPeriod, update, remove, removeAll };
+export default {
+  create,
+  filter,
+  findAll,
+  findYear,
+  findPeriod,
+  update,
+  remove,
+  removeAll,
+};
