@@ -5,7 +5,7 @@ const transactionRouter = express.Router();
 
 transactionRouter.post("/new", transactionService.create);
 transactionRouter.get("/all", transactionService.findAll);
-transactionRouter.get("/", transactionService.filter);
+// transactionRouter.get("/", transactionService.filter);
 transactionRouter.get("/", transactionService.findPeriod);
 transactionRouter.get("/year", transactionService.findYear);
 transactionRouter.put("/:id", transactionService.update);
