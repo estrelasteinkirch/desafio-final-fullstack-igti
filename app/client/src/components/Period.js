@@ -8,34 +8,43 @@ import Panel from "./Panel.js";
 import Filter from "./Filter.js";
 import ModalNew from "./ModalNew.js";
 import ModalEdit from "./ModalEdit.js";
+import css from "./css/style.module.css"
 
 export default function Period() {
-  const [currentDate, setCurrentDate] = useState("2020-07");
+  const [currentDate, setCurrentDate] = useState("2021-02");
   const [disabledIncrement, setDisabledIncrement] = useState(false);
   const [disabledDecrement, setDisabledDecrement] = useState(false);
   const [transactionsPeriod, setTransactionsPeriod] = useState([]);
   const [filteredTransactions, setFilteredTransactions] = useState([]);
   const [filter, setFilter] = useState("");
+  const [isModalNewOpen, setIsModalNewOpen] = useState(false);
+  const [isModalEditOpen, setIsModalEditOpen] = useState(false);
+  const [selectedTransaction, setSelectedTransaction] = useState({});
 
   useEffect(() => {
     const filterLowerCase = filter.toLowerCase();
+
     const filteredTransactions = transactionsPeriod.filter((t) => {
-      return t.description.includes(filterLowerCase);
+      return (
+        t.category.toLowerCase().includes(filterLowerCase) ||
+        t.description.toLowerCase().includes(filterLowerCase)
+      );
     });
+
     setFilteredTransactions(filteredTransactions);
   }, [filter, transactionsPeriod]);
 
   useEffect(() => {
-    const getTransactions = async (period) => {
-      const response = await transactionsService.getPeriod(period);
-      const allTransactions = response.data;
-      setTransactionsPeriod(allTransactions);
-      setFilteredTransactions(Object.assign([], allTransactions));
-    };
-
     getTransactions(currentDate);
     M.AutoInit();
   }, [currentDate]);
+
+  const getTransactions = async (period) => {
+    const response = await transactionsService.getPeriod(period);
+    const allTransactions = response.data;
+    setTransactionsPeriod(allTransactions);
+    setFilteredTransactions(Object.assign([], allTransactions));
+  };
 
   const handleChangeFilter = (event) => {
     const { value } = event.target;
@@ -70,8 +79,40 @@ export default function Period() {
     }
   };
 
+  const handleModalNewOpen = () => {
+    setIsModalNewOpen(true);
+  };
+
+  const handleClose = () => {
+    setIsModalNewOpen(false);
+    setIsModalEditOpen(false);
+  };
+
+  const handleCreate = async (formData) => {
+    await transactionsService.create(formData);
+    setIsModalNewOpen(false);
+    await getTransactions(currentDate);
+
+  };
+
+  const handleDelete = async (id) => {
+    await transactionsService.remove(id);
+    await getTransactions(currentDate);
+  };
+
+  const handleEditData = async (_id, formData) => {
+    await transactionsService.update(_id, formData);
+    setIsModalEditOpen(false);
+    await getTransactions(currentDate);
+  };
+
+  const handleEdit = (transaction) => {
+    setSelectedTransaction(transaction);
+    setIsModalEditOpen(true);
+  };
+
   return (
-    <div>
+    <div className="container center">
       <Header
         disabledDecrement={disabledDecrement}
         disabledIncrement={disabledIncrement}
@@ -80,10 +121,30 @@ export default function Period() {
         date={currentDate}
       />
       <Panel transactions={filteredTransactions} />
-      <ModalNew />
-      <Filter filter={filter} onChangeFilter={handleChangeFilter} />
-      <Transactions transactions={filteredTransactions} />
-      {/* <ModalEdit /> */}
+      {isModalNewOpen && (
+        <ModalNew onCreate={handleCreate} onClose={handleClose} />
+      )}
+      <div className={css.flexRow}>
+        <button
+          className={`${css.newButton} waves-effect btn teal lighten-1`}
+          onClick={handleModalNewOpen}
+        >
+          + Novo lançamento
+        </button>
+        <Filter filter={filter} onChangeFilter={handleChangeFilter} />
+      </div>
+      <Transactions
+        transactions={filteredTransactions}
+        onDelete={handleDelete}
+        onEdit={handleEdit}
+      />
+      {isModalEditOpen && (
+        <ModalEdit
+          onEdit={handleEditData}
+          onClose={handleClose}
+          selectedTransaction={selectedTransaction}
+        />
+      )}
     </div>
   );
 }

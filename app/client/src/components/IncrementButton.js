@@ -9,7 +9,7 @@ export default function IncrementButton(props) {
     <button
       onClick={handleButtonClick}
       disabled={props.disabled}
-      className="waves-effect waves-light btn green darken-4"
+      className="waves-effect btn teal lighten-1"
     >
       &gt;
     </button>

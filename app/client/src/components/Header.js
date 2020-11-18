@@ -2,6 +2,7 @@ import React from "react";
 import DecrementButton from "./DecrementButton";
 import IncrementButton from "./IncrementButton";
 import yearMonth from "../options.js";
+import css from "./css/style.module.css";
 
 export default function Header({
   date,
@@ -11,9 +12,9 @@ export default function Header({
   onChangeDate,
 }) {
   return (
-    <div>
+    <div className={`${css.flexRow}  input-field col s12`}>
       <DecrementButton onDecrement={onNextDate} disabled={disabledDecrement} />
-      <div className="input-field col s12">
+      <div className={css.inputDate}>
         <select
           value={date}
           onChange={onChangeDate}

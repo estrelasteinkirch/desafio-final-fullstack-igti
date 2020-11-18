@@ -1,4 +1,6 @@
 import React from "react";
+import css from "./css/style.module.css";
+import formatMoney from "../helpers/format";
 
 export default function Panel({ transactions }) {
   const numberTransactions = transactions.length;
@@ -11,12 +13,22 @@ export default function Panel({ transactions }) {
 
   const balance = totalIncome - totalExpenses;
 
+  const c = balance >= 0 ? "positive" : "negative";
+
   return (
-    <div>
-      <span>Lançamentos: {numberTransactions}</span>
-      <span>Receitas: {totalIncome}</span>
-      <span>Despesas: {totalExpenses}</span>
-      <span>Saldo: {balance}</span>
+    <div className={css.panelRow}>
+      <p>
+        Lançamentos: <span>{numberTransactions}</span>
+      </p>
+      <p>
+        Receitas: <span className={css.income}>{formatMoney(totalIncome)}</span>
+      </p>
+      <p>
+        Despesas: <span className={css.expense}>{formatMoney(totalExpenses)}</span>
+      </p>
+      <p>
+        Saldo:<span className={`${css.balance} ${css[c]}`}>{formatMoney(balance)}</span>{" "}
+      </p>
     </div>
   );
 }

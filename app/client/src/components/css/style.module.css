@@ -1,0 +1,56 @@
+.flexRow {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+tr {
+  border-top: 3px solid white;
+}
+
+.newButton {
+  margin-right: 5px;
+  min-width: 15rem;
+}
+
+.tdd p {
+  margin: 0px;
+}
+
+.inputDate {
+  margin: 0px 10px;
+}
+
+.panelRow {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  font-weight: bold;
+}
+
+.expense {
+  color: #f44336;
+}
+.income {
+  color: #009688;
+}
+
+.balance.positive {
+  color: #009688;
+}
+
+.balance.negative {
+  color: red;
+}
+.title{
+  font-size: 1.6rem;
+  font-weight: bold;
+  color: #009688;
+}
+
+.header{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-bottom: 40px;
+}

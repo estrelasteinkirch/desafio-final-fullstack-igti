@@ -9,7 +9,7 @@ export default function DecrementButton(props) {
     <button
       onClick={handleButtonClick}
       disabled={props.disabled}
-      className="waves-effect waves-light btn red darken-4"
+      className="waves-effect btn teal lighten-1"
     >
       &lt; 
     </button>

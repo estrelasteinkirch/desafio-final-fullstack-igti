@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import Modal from "react-modal";
+import css from "./css/style.module.css";
 
 Modal.setAppElement("#root");
 
@@ -53,8 +54,8 @@ export default function ModalNew({ onClose, onCreate }) {
   return (
     <div>
       <Modal style={{ overlay: { zIndex: 1000 } }} isOpen={true}>
-        <div>
-          <span>Inclusão de Lançamento</span>
+        <div className={css.header}>
+          <span className={css.title}>Inclusão de Lançamento</span>
           <button
             className="waves-effect waves-lights btn red dark-4"
             onClick={onClose}
@@ -64,7 +65,7 @@ export default function ModalNew({ onClose, onCreate }) {
         </div>
 
         <form onSubmit={handleFormSubmit}>
-          <div>
+          <div style={{ marginBottom: "30px" }}>
             <label>
               <input
                 name="group1"
@@ -112,7 +113,7 @@ export default function ModalNew({ onClose, onCreate }) {
             </label>
           </div>
 
-          <div className="input-field">
+          <div className={`${css.flexRow} input-field`}>
             <input
               id="inputValue"
               type="number"
@@ -131,14 +132,8 @@ export default function ModalNew({ onClose, onCreate }) {
             />
           </div>
 
-          <div>
-            <button
-              className="wavez-effect waves-lights btn"
-              // disabled={errorMessage.trim() !== ""}
-            >
-              Salvar
-            </button>
-            {/* <span style={styles.errorMessage}>{errorMessage}</span> */}
+          <div className={css.flexRow}>
+            <button className="wavez-effect waves-lights btn">Salvar</button>
           </div>
         </form>
       </Modal>
