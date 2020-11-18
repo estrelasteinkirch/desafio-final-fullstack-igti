@@ -1,8 +1,8 @@
 import React from "react";
 
-export default function Action({ _id, type, onActionClick }) {
+export default function Action({type, onActionClick }) {
   const handleIconClick = () => {
-    onActionClick(_id, type);
+    onActionClick(type);
   };
   return (
     <span
