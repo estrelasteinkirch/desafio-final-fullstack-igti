@@ -2,12 +2,6 @@ import mongoose from "mongoose";
 import { TransactionModel } from "../models/TransactionModel.js";
 const ObjectId = mongoose.Types.ObjectId;
 
-// Aqui havia um erro difícil de pegar. Importei como "transactionModel",
-// com "t" minúsculo. No Windows, isso não faz diferença. Mas como no Heroku
-// o servidor é Linux, isso faz diferença. Gastei umas boas horas tentando
-// descobrir esse erro :-/
-// const TransactionModel = require('../models/TransactionModel').default;
-
 const create = async (req, res) => {
   try {
     const transactions = new TransactionModel(req.body);
@@ -57,7 +51,9 @@ const findPeriod = async (req, res) => {
   const period = req.query.period;
 
   try {
-    const transactions = await TransactionModel.find({ yearMonth: period });
+    const transactions = await TransactionModel.find({
+      yearMonth: period,
+    }).sort({ day: 1 });
 
     if (!period) {
       return res.status(400).send({
